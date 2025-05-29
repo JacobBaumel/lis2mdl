@@ -45,9 +45,6 @@ mag_status_t LIS2MDL::wireUp(bool bypassWireInit) {
   if (!bypassWireInit) {
     switch(commMode) {
       case I2C_MODE:
-        pinMode(21,INPUT_PULLUP);
-        pinMode(22,INPUT_PULLUP);
-        Wire.begin(21, 22, 1 * 1000 * 1000);
         break;
       case SPI_MODE:
         SPI.begin();
