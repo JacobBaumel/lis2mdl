@@ -1,6 +1,6 @@
 #include "LIS2MDL.h"
 
-LIS2MDL::LIS2MDL(uint8_t comm, uint8_t inputAddress, TwoWire* wire = nullptr) : wire(wire) {
+LIS2MDL::LIS2MDL(uint8_t comm, uint8_t inputAddress, TwoWire* wire) : wire(wire) {
   commMode = comm;
   address = inputAddress;
   

@@ -224,7 +224,7 @@ class LIS2MDL {
   public:
     MagSensorSettings settings;
 
-    LIS2MDL(uint8_t comm = SPI_MODE, uint8_t inputAddress = 5);
+    LIS2MDL(uint8_t comm = SPI_MODE, uint8_t inputAddress = 5, TwoWire* wire = nullptr);
     ~LIS2MDL() = default;
 
     uint16_t allOnesCounter;
