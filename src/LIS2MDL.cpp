@@ -1,6 +1,6 @@
 #include "LIS2MDL.h"
 
-LIS2MDL::LIS2MDL(uint8_t comm, uint8_t inputAddress) {
+LIS2MDL::LIS2MDL(uint8_t comm, uint8_t inputAddress, TwoWire* wire = nullptr) : wire(wire) {
   commMode = comm;
   address = inputAddress;
   
@@ -177,14 +177,14 @@ mag_status_t LIS2MDL::readRegion(lis2mdlRegisters_t offset, uint8_t *output, uin
 
   switch (commMode) {
     case I2C_MODE:
-      Wire.beginTransmission(address);
-      Wire.write(offset);
-      if(Wire.endTransmission() != 0)
+      wire->beginTransmission(address);
+      wire->write(offset);
+      if(wire->endTransmission() != 0)
         status = MAG_HW_ERROR;
       else {
-        Wire.requestFrom(address, length);
-        while ((Wire.available()) && (i < length)) {
-          c = Wire.read();
+        wire->requestFrom(address, length);
+        while ((wire->available()) && (i < length)) {
+          c = wire->read();
           *output = c;
           output++;
           i++;
@@ -218,10 +218,10 @@ mag_status_t LIS2MDL::write(uint8_t offset, uint8_t data) {
   mag_status_t status = MAG_SUCCESS;
   switch (commMode) {
     case I2C_MODE:
-      Wire.beginTransmission(address);
-      Wire.write(offset);
-      Wire.write(data);
-      if (Wire.endTransmission() != 0)
+      wire->beginTransmission(address);
+      wire->write(offset);
+      wire->write(data);
+      if (wire->endTransmission() != 0)
         status = MAG_HW_ERROR;
       break;
     case SPI_MODE:

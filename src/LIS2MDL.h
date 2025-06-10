@@ -211,6 +211,7 @@ class LIS2MDL {
   uint8_t deviceId = 0x40;              // 01000000b
   uint8_t commMode;
   uint8_t address;                      // chip select for SPI, I2C address for I2C
+  TwoWire* wire;
 
   mag_status_t wireUp(bool bypassWireInit = false);
 
