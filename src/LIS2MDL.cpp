@@ -48,8 +48,6 @@ mag_status_t LIS2MDL::wireUp(bool bypassWireInit) {
         break;
       case SPI_MODE:
         SPI.begin();
-        SPI.setClockDivider(SPI_CLOCK_DIV16);
-        SPI.setBitOrder(MSBFIRST);
 
         pinMode(address, OUTPUT);
         digitalWrite(address, HIGH);
@@ -66,7 +64,7 @@ mag_status_t LIS2MDL::wireUp(bool bypassWireInit) {
 
   uint8_t readCheck;
   read(LIS2MDL_WHO_AM_I, &readCheck);
-  if (readCheck != deviceId) 
+  if (readCheck != deviceId)
     result = MAG_HW_ERROR;
 
   return result;
@@ -194,6 +192,8 @@ mag_status_t LIS2MDL::readRegion(lis2mdlRegisters_t offset, uint8_t *output, uin
     case SPI_MODE:
       digitalWrite(address, LOW);
 
+      SPI.beginTransaction(SPISettings(1000000, MSBFIRST, SPI_MODE0));
+
       SPI.transfer(offset | 0x80);
       while (i < length) {
         c = SPI.transfer(0x00);
@@ -207,6 +207,7 @@ mag_status_t LIS2MDL::readRegion(lis2mdlRegisters_t offset, uint8_t *output, uin
       if(allOnesCounter == i)
         status = MAG_ALL_ONES_WARNING;
 
+      SPI.endTransaction();
       digitalWrite(address, HIGH);
       break;
   }
@@ -226,8 +227,10 @@ mag_status_t LIS2MDL::write(uint8_t offset, uint8_t data) {
       break;
     case SPI_MODE:
       digitalWrite(address, LOW);
+      SPI.beginTransaction(SPISettings(1000000, MSBFIRST, SPI_MODE0));
       SPI.transfer(offset);
       SPI.transfer(data);
+      SPI.endTransaction();
       digitalWrite(address, HIGH);
       break;
     default:
